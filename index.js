@@ -1,12 +1,13 @@
 import express from "express";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
+import cookieParser from "cookie-parser";
 import hotelsRoute from "./routes/hotels.js";
+import authRoute from "./routes/auth.js";
+import userRoute from "./routes/users.js";
 
 dotenv.config();
-
 const app = express();
-
 const DB = process.env.DATABASE;
 
 mongoose
@@ -15,11 +16,13 @@ mongoose
   })
   .then(() => console.log("Successfully connected to the mongoose"));
 
+app.use(cookieParser());
 app.use(express.json());
 
-// app.use("/api/auth", authRoute)
-// app.use("/api/users", usersRoute)
+app.use("/api/auth", authRoute);
+app.use("/api/users", userRoute);
 app.use("/api/hotels", hotelsRoute);
+// app.use("/api", authRoute);
 // app.use("/api/rooms", roomsRoute)
 
 app.use((err, req, res, next) => {
@@ -33,6 +36,6 @@ app.use((err, req, res, next) => {
   });
 });
 
-app.listen(2000, () => {
-  console.log("connected to backend...!!");
+app.listen(9000, () => {
+  console.log("connected to port 9000...!!");
 });
