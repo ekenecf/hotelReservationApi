@@ -6,7 +6,8 @@ export const createRoom = async (req, res, next) => {
   const hotelId = req.params.hotelId;
   //   const newRoom = new Room(req.body);
   //   Since theres is relationship btw room and hotel we are creating a new try catch block to get the hotel id
-  const { title, price, maxPeople, desc, image, roomNumbers } = req.body;
+  console.log(req.body);
+  const { title, price, maxPeople, desc, roomNumbers } = req.body;
   try {
     const result = await cloudinary.uploader.upload(
       req.files.image.tempFilePath,
