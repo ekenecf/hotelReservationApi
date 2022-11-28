@@ -1,14 +1,34 @@
 import Room from "../models/room.js";
 import Hotel from "../models/hotel.js";
-import { createError } from "../utils/error.js";
+import cloudinary from "../utils/cloudinary.js";
 
 export const createRoom = async (req, res, next) => {
   const hotelId = req.params.hotelId;
-//   const newRoom = new Room(req.body);
-//   Since theres is relationship btw room and hotel we are creating a new try catch block to get the hotel id
+  //   const newRoom = new Room(req.body);
+  //   Since theres is relationship btw room and hotel we are creating a new try catch block to get the hotel id
+  const { title, price, maxPeople, desc, image, roomNumbers } = req.body;
   try {
-    // const savedRoom = await newRoom.save();
-    const savedRoom = await Room.create(req.body);
+    const result = await cloudinary.uploader.upload(
+      req.files.image.tempFilePath,
+      (err, result) => {
+        try {
+          return result;
+        } catch (err) {
+          return err;
+        }
+      }
+    );
+    const savedRoom = await Room.create({
+      title,
+      price,
+      maxPeople,
+      desc,
+      image: {
+        public_id: result.public_id,
+        url: result.secure_url,
+      },
+      roomNumbers,
+    });
     try {
       //We update the hotel because we need to update the room column with the hotel_Id which is the relationship btw both
       //Therefore we use the mongoDB push method to push the room back to the hotel.
@@ -18,6 +38,10 @@ export const createRoom = async (req, res, next) => {
     } catch (error) {
       next(error);
     }
+    // const savedRoom = await newRoom.save();
+    console.log(result);
+    console.log(savedRoom);
+
     res.status(201).json({
       message: "Created successfully",
       data: {
@@ -31,13 +55,9 @@ export const createRoom = async (req, res, next) => {
 
 export const updateRoom = async (req, res, next) => {
   try {
-    const updatedRoom = await Room.findByIdAndUpdate(
-      req.params.id,
-      req.body,
-      {
-        new: true,
-      }
-    );
+    const updatedRoom = await Room.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+    });
     res.status(200).json({
       message: "Successful",
       data: {
@@ -83,14 +103,14 @@ export const deleteRoom = async (req, res, next) => {
   const hotelId = req.params.hotelId;
   try {
     try {
-        //We update the hotel because we need to update the room column with the hotel_Id which is the relationship btw both
-        //Therefore we use the mongoDB pull method to pull the room out of the hotel.
-        await Hotel.findByIdAndUpdate(hotelId, {
-          $pull: { rooms: req.params.id },
-        });
-      } catch (error) {
-        next(error);
-      }
+      //We update the hotel because we need to update the room column with the hotel_Id which is the relationship btw both
+      //Therefore we use the mongoDB pull method to pull the room out of the hotel.
+      await Hotel.findByIdAndUpdate(hotelId, {
+        $pull: { rooms: req.params.id },
+      });
+    } catch (error) {
+      next(error);
+    }
     await Room.findByIdAndDelete(req.params.id);
     res.status(200).json({
       message: "Successfully deleted Room!!",

@@ -18,6 +18,16 @@ const roomSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    image: {
+      public_id: {
+        type: String,
+        required:true
+      },
+      url: {
+        type: String,
+        required:true
+      }
+    },
     roomNumbers: [{ number: Number, unavailableDates: { type: Date } }],
   },
   { timestamps: true }

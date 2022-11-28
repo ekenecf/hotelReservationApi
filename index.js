@@ -2,6 +2,7 @@ import express from "express";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
 import cookieParser from "cookie-parser";
+import fileupload from "express-fileupload";
 import hotelsRoute from "./routes/hotels.js";
 import authRoute from "./routes/auth.js";
 import userRoute from "./routes/users.js";
@@ -17,6 +18,11 @@ mongoose
   })
   .then(() => console.log("Successfully connected to mongoose"));
 
+app.use(
+  fileupload({
+    useTempFiles: true,
+  })
+);
 app.use(cookieParser());
 app.use(express.json());
 
