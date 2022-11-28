@@ -32,7 +32,7 @@ export const login = async (req, res, next) => {
     );
     if (!isPasswordCorrect)
       return next(createError(400, "Incorrect username or password"));
-      //here, we create/sign our jwt into header having just id and isAdmin in it.
+    //here, we create/sign our jwt into header having just id and isAdmin in it.
     const token = jwt.sign(
       { id: user._id, isAdmin: user.isAdmin },
       process.env.JWT
@@ -40,7 +40,7 @@ export const login = async (req, res, next) => {
     //We use ...otherDetails to specify other parameters
     //technically our user is inside the _.doc  thats why we use the user._doc you could check by console.log(user._doc) after line36
     const { isAdmin, password, ...otherDetails } = user._doc;
-    //   console.log(otherDetails)
+    //you need to install cookie parser before you can give cookie ie res.cookie(cookieName, token)
     res
       .cookie("access_token", token, {
         httpOnly: true,
