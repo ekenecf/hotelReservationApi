@@ -9,19 +9,23 @@ import { verifyToken, checkUser, checkIsAdmin } from "../utils/verifyToken.js";
 
 const router = express.Router();
 
-router.route("/checkAuthentication").get(verifyToken, (req, res, next) => {
-  res.send("Hello user, you are logged In");
-});
-//checkuser
-router.route("/checkUser/:id").get(checkUser, (req, res, next) => {
-  res.send("Hello user, you are logged In and can delete account");
-});
-//check admin
-router.route("/checkAdmin/:id").get(checkIsAdmin, (req, res, next) => {
-  res.send("Hello Admin, you are logged In and can delete all account");
-});
+// router.route("/checkAuthentication").get(verifyToken, (req, res, next) => {
+//   res.send("Hello user, you are logged In");
+// });
+// //checkuser
+// router.route("/checkUser/:id").get(checkUser, (req, res, next) => {
+//   res.send("Hello user, you are logged In and can delete account");
+// });
+// // //check admin
+// router.route("/checkAdmin/:id").get(checkIsAdmin, (req, res, next) => {
+//   res.send("Hello Admin, you are logged In and can delete all account");
+// });
 
-router.route("/").get(getAllUser);
-router.route("/:id").get(getOneUser).delete(deleteUser).put(updateUser);
+router.route("/").get(checkIsAdmin, getAllUser);
+router
+  .route("/:id")
+  .get(checkUser, getOneUser)
+  .delete(checkUser, deleteUser)
+  .put(checkUser, updateUser);
 
 export default router;
