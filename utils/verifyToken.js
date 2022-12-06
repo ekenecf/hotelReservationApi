@@ -18,7 +18,6 @@ export const verifyToken = (req, res, next) => {
 //checkUser before any action is carried out
 export const checkUser = (req, res, next) => {
   verifyToken(req, res, next, () => {
-    //we dont need next in the verify token fxn if not it will go to the users route
     // here req.user.id is coming from the token we signed.
     if (req.user.id === req.params.id || req.user.isAdmin) {
       next();

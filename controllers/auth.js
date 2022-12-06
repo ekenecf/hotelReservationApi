@@ -40,7 +40,7 @@ export const login = async (req, res, next) => {
     //We use ...otherDetails to specify other parameters
     //technically our user is inside the _.doc  thats why we use the user._doc you could check by console.log(user._doc) after line36
     const { isAdmin, password, ...otherDetails } = user._doc;
-    //you need to install cookie parser before you can give cookie ie res.cookie(cookieName, token)
+    //you need to install cookie-parser before you can give cookie ie res.cookie(cookieName, token)
     res
       .cookie("access_token", token, {
         httpOnly: true,
@@ -55,4 +55,15 @@ export const login = async (req, res, next) => {
   } catch (error) {
     next(error);
   }
+};
+
+export const forgotpassword = async (req, res, next) => {
+  // Get user based on posted email
+  const user = await User.findOne({ username: req.body.username });
+  if (!user) return next(createError(404, "No user with that username"));
+  //generate random token reset
+  const resetToken = user.createResetPassword()
+  //validateBeforeSave: false sets all validations to false incase theres a validation
+  await user.save({ validateBeforeSave: false })
+  //send it back to user email
 };
