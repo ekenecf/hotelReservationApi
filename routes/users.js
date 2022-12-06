@@ -5,6 +5,7 @@ import {
   getOneUser,
   deleteUser,
 } from "../controllers/users.js";
+import { forgotpassword } from "../controllers/auth.js";
 import { verifyToken, checkUser, checkIsAdmin } from "../utils/verifyToken.js";
 
 const router = express.Router();
@@ -27,5 +28,8 @@ router
   .get(checkUser, getOneUser)
   .delete(checkUser, deleteUser)
   .put(checkUser, updateUser);
+
+router.route("/forgotpassword").post(forgotpassword);
+router.route("/resetpassword").post();
 
 export default router;

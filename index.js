@@ -8,7 +8,7 @@ import authRoute from "./routes/auth.js";
 import userRoute from "./routes/users.js";
 import roomsRoute from "./routes/rooms.js";
 
-dotenv.config();
+dotenv.config({path: "./utils/.env"});
 const app = express();
 const DB = process.env.DATABASE;
 
