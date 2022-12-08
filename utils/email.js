@@ -12,9 +12,8 @@ const sendEmail = async (options) => {
       password: process.env.EMAIL_PASSWORD,
     },
   });
-
   //define email options
-  mailOptions = {
+  let mailOptions = {
     //specify where the email is coming from
     from: "Ekene Nwachukwu <hello@ekene.com>",
     to: options.email,

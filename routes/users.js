@@ -30,6 +30,6 @@ router
   .put(checkUser, updateUser);
 
 router.route("/forgotpassword").post(forgotpassword);
-router.route("/resetpassword").post();
+router.route("/resetpassword/:token").patch();
 
 export default router;

@@ -2,6 +2,7 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import User from "../models/user.js";
 import { createError } from "../utils/error.js";
+import sendEmail from "../utils/email.js";
 
 export const registerUser = async (req, res, next) => {
   const salt = bcrypt.genSaltSync(10);
@@ -62,8 +63,37 @@ export const forgotpassword = async (req, res, next) => {
   const user = await User.findOne({ username: req.body.username });
   if (!user) return next(createError(404, "No user with that username"));
   //generate random token reset
-  const resetToken = user.createResetPassword()
+  const resetToken = user.createResetPassword();
+
   //validateBeforeSave: false sets all validations to false incase theres a validation
-  await user.save({ validateBeforeSave: false })
+  await user.save({ validateBeforeSave: false });
   //send it back to user email
+  const resetURL = `${req.protocol}://${req.get(
+    "host"
+  )}/api/users/resetpassword/${resetToken}`;
+
+  try {
+    const message = `Forgot your password? Submit patch request with your new password to: ${resetURL}. \nIf you didnt, forget your password simply ignore`;
+    sendEmail({
+      email: user.email,
+      subject: "Your password reset token is valid for 10 mins",
+      message,
+    });
+    res.status(200).json({
+      status: "success",
+      message: "Token sent to email!",
+    });
+    console.log(user.passwordResetToken)
+    console.log(user.passwordResetExpires)
+  } catch (err) {
+    user.passwordResetToken = undefined;
+    user.passwordResetExpires = undefined;
+    await user.save({ validateBeforeSave: false });
+    return next(
+      createError(
+        500,
+        "There was an error sending email, please try again later"
+      )
+    );
+  }
 };
