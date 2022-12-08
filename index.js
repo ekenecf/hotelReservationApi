@@ -16,7 +16,7 @@ mongoose
   .connect(DB, {
     useNewUrlParser: true,
   })
-  .then(() => console.log("Successfully connected to mongoose"));
+  .then(() => console.log("Db connect success!!"));
 
 app.use(
   fileupload({
