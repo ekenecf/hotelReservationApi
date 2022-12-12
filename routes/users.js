@@ -5,7 +5,7 @@ import {
   getOneUser,
   deleteUser,
 } from "../controllers/users.js";
-import { forgotpassword } from "../controllers/auth.js";
+import { forgotpassword, resetpassword } from "../controllers/auth.js";
 import { verifyToken, checkUser, checkIsAdmin } from "../utils/verifyToken.js";
 
 const router = express.Router();
@@ -30,6 +30,6 @@ router
   .put(checkUser, updateUser);
 
 router.route("/forgotpassword").post(forgotpassword);
-router.route("/resetpassword").post();
+router.route("/resetpassword/:token").patch(resetpassword);
 
 export default router;

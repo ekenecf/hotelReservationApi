@@ -40,8 +40,6 @@ export const createRoom = async (req, res, next) => {
       next(error);
     }
     // const savedRoom = await newRoom.save();
-    console.log(result);
-    console.log(savedRoom);
 
     res.status(201).json({
       message: "Created successfully",
