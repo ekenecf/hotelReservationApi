@@ -120,3 +120,5 @@ export const resetpassword = async (req, res, next) => {
   //3)Update changedpasswordPropertyAt property for the user
   //4) Log the user in by sending JWT to the client
 }
+
+export const updatePassword
