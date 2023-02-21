@@ -10,7 +10,7 @@ export const registerUser = async (req, res, next) => {
   const hash = bcrypt.hashSync(req.body.password, salt)
 
   try {
-    // Instead of just using req.body in the create method, we use the req.body.username... to encode password
+    // Instead of just using req.body in the create method, we use the req.body.password... to encode password
     await User.create({
       username: req.body.username,
       email: req.body.email,
@@ -108,11 +108,10 @@ export const resetpassword = async (req, res, next) => {
   })
   //2)If token is not expired and theres a user
   if (!user) return next(createError(400, 'Token is invalid or expired'))
-  user.password = req.body.password
-  user.passwordResetToken = undefined
-  user.passwordResetExpires = undefined
   const salt = bcrypt.genSaltSync(10)
   user.password = bcrypt.hashSync(req.body.password, salt)
+  user.passwordResetToken = undefined
+  user.passwordResetExpires = undefined
   await user.save()
   res.status(200).json({
     status: 'success',
@@ -121,4 +120,4 @@ export const resetpassword = async (req, res, next) => {
   //4) Log the user in by sending JWT to the client
 }
 
-export const updatePassword
+// export const updatePassword
